@@ -3,7 +3,7 @@ from typing import Type, Any
 from injector import Injector, Binder
 
 
-def configure(binder: Binder):
+def configure(binder: Binder) -> None:
     from .configuration import AzureLogServiceConfiguration
 
     binder.bind(AzureLogServiceConfiguration, AzureLogServiceConfiguration.build())

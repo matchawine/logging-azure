@@ -19,7 +19,7 @@ if __name__ == "__main__":
         long_description_content_type="text/markdown",
         author="Joshua Logan",
         author_email="joshua@matcha.wine",
-        url="https://github.com/matchawine/python-logging-azure",
+        url="https://github.com/matchawine/logging-azure",
         packages=find_packages(),
         license="GPL",
         keywords="utils",

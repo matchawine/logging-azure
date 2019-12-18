@@ -23,4 +23,4 @@ class AzureLogRecord(DataClassJsonMixin):
     log_response: Optional[Response] = None
 
     def __hash__(self):
-        hash(self.id)
+        return hash(self.id)

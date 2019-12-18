@@ -1,7 +1,7 @@
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
-def get_version():
+def get_version() -> str:
     """
     Returns a PEP 386-compliant version number from __version__.
     """

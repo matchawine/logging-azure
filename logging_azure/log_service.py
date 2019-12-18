@@ -6,7 +6,7 @@ import base64
 import json
 from time import sleep
 from injector import singleton, inject
-from typing import Optional, List, Callable, Iterable, Dict, Any
+from typing import Optional, List, Callable, Iterable, Dict, Any, Union
 from threading import Thread
 from uuid import uuid4
 from .log_record import AzureLogRecord
@@ -30,16 +30,16 @@ class AzureLogService:
         self._worker: Thread = Thread(target=self._run_worker)
         self._worker.start()
 
-    def add_record(self, record_data: Dict[str, Any]):
+    def add_record(self, record_data: Dict[str, Any]) -> None:
         new_record = AzureLogRecord(id=str(uuid4()), **record_data)
         self._jobs.append(new_record)
 
-    def _clean_queue(self, worker_list: List[AzureLogRecord]):
+    def _clean_queue(self, worker_list: List[AzureLogRecord]) -> None:
         for record in worker_list:
             if record.log_response and record.log_response.status_code in range(200, 300):
                 self._jobs.remove(record)
 
-    def _run_worker(self):
+    def _run_worker(self) -> None:
         while True:
             worker_list = self._jobs.copy()
             requests = (self._build_request(record) for record in worker_list)
@@ -53,7 +53,7 @@ class AzureLogService:
         stream: bool = False,
         exception_handler: Callable = None,
         gtimeout: Optional[int] = None,
-    ):
+    ) -> None:
         """Concurrently handles a collection of AzureLogRecords to convert the requests to responses.
 
         :param tasks: a collection of AzureLogRecord objects.
@@ -76,7 +76,7 @@ class AzureLogService:
             else:
                 record.log_response = None
 
-    def _build_uri(self):
+    def _build_uri(self) -> str:
         resource = self._RESOURCE
         uri = self._ENDPOINT_URI.format(customer_id=self._configuration.customer_id, resource=resource)
         return uri
@@ -109,7 +109,7 @@ class AzureLogService:
         )
         return authorization
 
-    def _build_headers(self, body: str, log_type: str) -> Dict[str, Any]:
+    def _build_headers(self, body: str, log_type: str) -> Dict[str, str]:
         """Build and send a request to the POST API
         :param body: str: JSON web monitor object
         :param log_type: str: Name of the Event/CustomLogs that is being submitted
@@ -130,7 +130,7 @@ class AzureLogService:
         }
         return headers
 
-    def _build_body(self, record: AzureLogRecord):
+    def _build_body(self, record: AzureLogRecord) -> Dict[str, Union[str, int]]:
         body = dict(
             level=record.level,
             time=record.time,
