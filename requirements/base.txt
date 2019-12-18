@@ -1,0 +1,3 @@
+injector==0.18.2
+cython==0.29.14
+grequests==0.4.0
