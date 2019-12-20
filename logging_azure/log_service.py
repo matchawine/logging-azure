@@ -27,7 +27,7 @@ class AzureLogService:
     def __init__(self, configuration: AzureLogServiceConfiguration):
         self._configuration: AzureLogServiceConfiguration = configuration
         self._jobs: List[AzureLogRecord] = list()
-        self._worker: Thread = Thread(target=self._run_worker)
+        self._worker: Thread = Thread(target=self._run_worker, daemon=True)
         self._worker.start()
 
     def add_record(self, record_data: Dict[str, Any]) -> None:
